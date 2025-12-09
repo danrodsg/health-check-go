@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-// HealthResponse estrutura a resposta do Health Check.
+
 type HealthResponse struct {
 	Status      string                      `json:"status"`
 	Timestamp   time.Time                   `json:"timestamp"`
@@ -23,9 +23,8 @@ func NewHealthHandler(checkers []checker.DependencyChecker) *HealthHandler {
 	return &HealthHandler{Checkers: checkers}
 }
 
-// HealthCheck executa todas as checagens com um timeout global.
+
 func (h *HealthHandler) HealthCheck(c *gin.Context) {
-	// Define um timeout global de 1 segundo para toda a checagem
 	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
 	defer cancel()
 
@@ -42,8 +41,7 @@ func (h *HealthHandler) HealthCheck(c *gin.Context) {
 		status := "UP"
 		if err != nil {
 			status = "DOWN"
-			httpStatus = http.StatusServiceUnavailable // Se uma checagem falhar, o status final é 503
-			// O erro do contexto (timeout) pode ser checado aqui para dar uma mensagem específica
+			httpStatus = http.StatusServiceUnavailable 
 		}
 		response.Components[chk.Name()] = status
 	}
